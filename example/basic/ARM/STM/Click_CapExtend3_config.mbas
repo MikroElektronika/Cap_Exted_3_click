@@ -1,0 +1,5 @@
+module Click_CapExtend3_config
+
+include Click_CapExtend3_types
+
+end.

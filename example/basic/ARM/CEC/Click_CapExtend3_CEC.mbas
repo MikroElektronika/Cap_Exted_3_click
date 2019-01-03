@@ -1,0 +1,85 @@
+'
+'Example for CapExtend3 Click
+'
+'    Date          : Jan 2018.
+'    Author        : MikroE Team
+'
+'Test configuration CEC :
+'    
+'    MCU              : CEC1702
+'    Dev. Board       : Clicker 2 for CEC1702
+'    ARM Compiler ver : v6.0.0.0
+'
+'---
+'
+'Description :
+'
+'The application is composed of three sections :
+'
+'- System Initialization - Initialize AN, RST, CS, PWM, INT pin as INPUT
+'- Application Initialization -  Initialize GPIO Driver
+'- Application Task - (code snippet) - In depending witch button will be touched the usb uart
+'  will show number of button witch is touched.
+'
+'
+program Click_CapExtend3_CEC
+
+include Click_CapExtend3_types
+include Click_CapExtend3_config
+
+dim
+    touch_0 as uint8_t 
+    touch_1 as uint8_t 
+    touch_3 as uint8_t 
+    touch_4 as uint8_t 
+    
+sub procedure systemInit() 
+
+    mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_AN_PIN, _GPIO_INPUT) 
+    mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_RST_PIN, _GPIO_INPUT) 
+    mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_CS_PIN, _GPIO_INPUT) 
+    mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_PWM_PIN, _GPIO_INPUT) 
+    mikrobus_gpioInit(_MIKROBUS1, _MIKROBUS_INT_PIN, _GPIO_INPUT) 
+    mikrobus_logInit(_MIKROBUS2, 9600) 
+    Delay_ms(100) 
+
+end sub
+
+sub procedure applicationInit() 
+
+    capextend3_gpioDriverInit(T_CAPEXTEND3_P(@_MIKROBUS1_GPIO)) 
+    mikrobus_logWrite("---- Init ----", _LOG_LINE) 
+
+end sub
+
+sub procedure applicationTask() 
+
+    touch_1 = capextend3_Touch_1() 
+    touch_0 = capextend3_Touch_0() 
+    touch_3 = capextend3_Touch_3() 
+    touch_4 = capextend3_Touch_4() 
+    if ((touch_0 = 0)) then 
+        mikrobus_logWrite("Touch 0 ", _LOG_LINE) 
+    end if
+    if ((touch_1 = 0)) then 
+        mikrobus_logWrite("Touch 1 ", _LOG_LINE) 
+    end if
+    if ((touch_3 = 0)) then 
+        mikrobus_logWrite("Touch 3 ", _LOG_LINE) 
+    end if
+    if ((touch_4 = 0)) then 
+        mikrobus_logWrite("Touch 4 ", _LOG_LINE) 
+    end if
+    Delay_ms(100) 
+
+end sub
+
+main :
+
+    systemInit() 
+    applicationInit() 
+    while (1) 
+        applicationTask() 
+    wend
+
+end.

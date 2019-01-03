@@ -1,0 +1,5 @@
+unit Click_CapExtend3_config;
+
+uses Click_CapExtend3_types;
+
+end.
